@@ -1,0 +1,20 @@
+# CAFA 6 Configuration
+
+data:
+  raw_dir: "data/raw"
+  processed_dir: "data/processed"
+  embeddings_dir: "data/embeddings"
+
+model:
+  esm2_name: "facebook/esm2_t12_35M_UR50D"
+  top_n_go_terms: 1000
+  batch_size: 8
+
+training:
+  validation_split: 0.2
+  n_estimators: 100
+  random_state: 42
+
+output:
+  models_dir: "models"
+  predictions_dir: "outputs/predictions"
