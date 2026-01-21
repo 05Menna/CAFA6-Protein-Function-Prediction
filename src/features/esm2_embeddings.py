@@ -35,7 +35,7 @@ def load_esm2_model(model_name="facebook/esm2_t12_35M_UR50D"):
     Returns:
         model, tokenizer
     """
-    print(f"📥 Loading {model_name}...")
+    print(f" Loading {model_name}...")
     
     # Load tokenizer (converts sequences to tokens)
     tokenizer = AutoTokenizer.from_pretrained(model_name)
@@ -124,7 +124,7 @@ def extract_embeddings_batch(sequences, model, tokenizer, device,
     """
     all_embeddings = []
     
-    print(f"\n🔄 Extracting embeddings for {len(sequences)} sequences...")
+    print(f"\n Extracting embeddings for {len(sequences)} sequences...")
     print(f"   Batch size: {batch_size}")
     print(f"   Pooling: {pooling}")
     
@@ -143,7 +143,7 @@ def extract_embeddings_batch(sequences, model, tokenizer, device,
     # Convert to numpy array
     embeddings = np.array(all_embeddings)
     
-    print(f"✓ Embeddings shape: {embeddings.shape}")
+    print(f" Embeddings shape: {embeddings.shape}")
     
     return embeddings
 
@@ -170,7 +170,7 @@ def extract_and_save_embeddings(sequences, protein_ids, model, tokenizer, device
     embeddings_list = []
     ids_list = []
     
-    print(f"\n💾 Extracting embeddings with checkpointing...")
+    print(f"\n Extracting embeddings with checkpointing...")
     
     for i in tqdm(range(0, len(sequences), batch_size)):
         batch_seqs = sequences[i:i + batch_size]
@@ -199,7 +199,7 @@ def extract_and_save_embeddings(sequences, protein_ids, model, tokenizer, device
         protein_ids=np.array(ids_list)
     )
     
-    print(f"\n✅ All embeddings saved to {output_file}")
+    print(f"\n All embeddings saved to {output_file}")
     print(f"   Total sequences: {len(embeddings_list)}")
 
 
@@ -257,7 +257,7 @@ if __name__ == "__main__":
     )
     
     print("\n" + "=" * 70)
-    print("✅ EXTRACTION COMPLETE")
+    print(" EXTRACTION COMPLETE")
     print("=" * 70)
     print(f"Embeddings ready for classification!")
     print(f"Shape: {embeddings.shape}")

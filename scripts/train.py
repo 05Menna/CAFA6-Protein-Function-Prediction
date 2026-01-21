@@ -26,7 +26,6 @@ sys.path.append(str(Path(__file__).parent.parent))
 
 # Now you can import from src
 from src.data.data_loader import load_go_annotations, load_protein_sequences, load_taxonomy_data, create_multilabel_dataset
-from src.evaluation.metrics import evaluate_multilabel, print_metrics
 from src.features.esm2_embeddings import load_esm2_model
 from src.models.binary_relevance import train_binary_relevance_xgboost
 # ============================================================================
@@ -81,19 +80,19 @@ def load_and_prepare_data(config):
     print("=" * 70)
     
     # Load sequences (using function from previous script)
-    print("\n📂 Loading sequences...")
+    print("\n Loading sequences...")
     sequences = load_protein_sequences(config.TRAIN_SEQUENCES)
     
     # Load GO annotations
-    print("\n📂 Loading GO annotations...")
+    print("\n Loading GO annotations...")
     go_annotations = load_go_annotations(config.TRAIN_TERMS)
     
     # Load taxonomy
-    print("\n📂 Loading taxonomy...")
+    print("\n Loading taxonomy...")
     taxonomy = load_taxonomy_data(config.TRAIN_TAXONOMY)
     
     # Create training dataset
-    print("\n🔨 Creating training dataset...")
+    print("\n Creating training dataset...")
     X, y, go_terms = create_multilabel_dataset(
         sequences,
         go_annotations,
@@ -123,7 +122,7 @@ def get_embeddings(sequences, config, force_recompute=False):
     
     # Check if embeddings already exist
     if embeddings_file.exists() and not force_recompute:
-        print("\n✓ Loading cached embeddings...")
+        print("\n Loading cached embeddings...")
         embeddings, _ = load_embeddings(embeddings_file)
         return embeddings
     
@@ -144,7 +143,7 @@ def get_embeddings(sequences, config, force_recompute=False):
     )
     
     # Save for future use
-    print(f"\n💾 Saving embeddings to {embeddings_file}")
+    print(f"\n Saving embeddings to {embeddings_file}")
     np.savez_compressed(
         embeddings_file,
         embeddings=embeddings,
@@ -178,7 +177,7 @@ def train_models(X, y, go_terms, config):
         random_state=42
     )
     
-    print(f"\n📊 Data split:")
+    print(f"\n Data split:")
     print(f"   Training: {len(X_train)}")
     print(f"   Validation: {len(X_val)}")
     
@@ -196,7 +195,7 @@ def train_models(X, y, go_terms, config):
     
     # Save models
     models_file = config.MODELS_DIR / "xgboost_models.pkl"
-    print(f"\n💾 Saving models to {models_file}")
+    print(f"\n Saving models to {models_file}")
     with open(models_file, 'wb') as f:
         pickle.dump({'models': models, 'go_terms': go_terms}, f)
     
@@ -224,13 +223,13 @@ def predict_test_set(config, models, go_terms):
     print("=" * 70)
     
     # Load test sequences
-    print("\n📂 Loading test sequences...")
+    print("\n Loading test sequences...")
     test_sequences = load_protein_sequences(config.TEST_SEQUENCES)
     test_ids = list(test_sequences.keys())
     test_seqs = list(test_sequences.values())
     
     # Extract embeddings for test set
-    print("\n🔄 Extracting embeddings for test set...")
+    print("\n Extracting embeddings for test set...")
     model, tokenizer, device = load_esm2_model(config.ESM2_MODEL)
     X_test = extract_embeddings_batch(
         test_seqs,
@@ -241,11 +240,11 @@ def predict_test_set(config, models, go_terms):
     )
     
     # Make predictions
-    print("\n🔮 Making predictions...")
+    print("\n Making predictions...")
     y_pred, y_proba = predict_binary_relevance(models, X_test)
     
     # Create submission file in CAFA format
-    print("\n📝 Creating submission file...")
+    print("\n Creating submission file...")
     submission_rows = []
     
     for i, protein_id in enumerate(tqdm(test_ids, desc="Formatting submission")):
@@ -270,7 +269,7 @@ def predict_test_set(config, models, go_terms):
     # Save submission
     submission_df.to_csv(config.SUBMISSION_FILE, sep='\t', index=False)
     
-    print(f"\n✅ Submission saved to {config.SUBMISSION_FILE}")
+    print(f"\n Submission saved to {config.SUBMISSION_FILE}")
     print(f"   Total predictions: {len(submission_df)}")
     print(f"   Unique proteins: {submission_df['EntryID'].nunique()}")
     print(f"   Avg predictions per protein: {len(submission_df) / submission_df['EntryID'].nunique():.1f}")
@@ -295,7 +294,7 @@ def main():
     
     # Check if data exists
     if not config.TRAIN_SEQUENCES.exists():
-        print("❌ ERROR: CAFA 6 data not found!")
+        print(" ERROR: CAFA 6 data not found!")
         print("\nPlease download the data from:")
         print("https://www.kaggle.com/competitions/cafa-6-protein-function-prediction/data")
         print(f"\nAnd extract to: {config.DATA_DIR}")
@@ -314,11 +313,11 @@ def main():
     submission = predict_test_set(config, models, go_terms)
     
     print("\n" + "=" * 70)
-    print("✅ PIPELINE COMPLETE!")
+    print(" PIPELINE COMPLETE!")
     print("=" * 70)
     print(f"\nYour submission is ready: {config.SUBMISSION_FILE}")
     print("Upload it to Kaggle to see your score!")
-    print("\nGood luck! 🚀")
+    print("\nGood luck! ")
 
 
 # ============================================================================

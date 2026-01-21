@@ -49,7 +49,7 @@ def load_protein_sequences(fasta_file):
         if current_id:
             sequences[current_id] = ''.join(current_seq)
     
-    print(f"✓ Loaded {len(sequences)} protein sequences")
+    print(f" Loaded {len(sequences)} protein sequences")
     return sequences
 
 
@@ -66,7 +66,7 @@ def load_go_annotations(train_terms_file):
     # Load TSV file
     df = pd.read_csv(train_terms_file, sep='\t')
     
-    print(f"✓ Loaded {len(df)} GO annotations")
+    print(f" Loaded {len(df)} GO annotations")
     print(f"  - Unique proteins: {df['EntryID'].nunique()}")
     print(f"  - Unique GO terms: {df['term'].nunique()}")
     print(f"\nGO term distribution by aspect:")
@@ -86,7 +86,7 @@ def load_taxonomy_data(train_taxonomy_file):
         DataFrame with taxonomic info
     """
     df = pd.read_csv(train_taxonomy_file, sep='\t')
-    print(f"✓ Loaded taxonomy data for {len(df)} proteins")
+    print(f" Loaded taxonomy data for {len(df)} proteins")
     return df
 
 
@@ -112,7 +112,7 @@ def create_multilabel_dataset(sequences_dict, go_annotations_df, top_n_terms=100
     term_counts = go_annotations_df['term'].value_counts()
     top_terms = term_counts.head(top_n_terms).index.tolist()
     
-    print(f"\n📊 Using top {top_n_terms} GO terms")
+    print(f"\n Using top {top_n_terms} GO terms")
     print(f"Coverage: {term_counts.head(top_n_terms).sum() / term_counts.sum() * 100:.1f}%")
     
     # Filter annotations to only include top terms
@@ -164,7 +164,7 @@ def analyze_sequences(sequences_dict):
     """
     lengths = [len(seq) for seq in sequences_dict.values()]
     
-    print("\n📏 Sequence Length Statistics:")
+    print("\n Sequence Length Statistics:")
     print(f"  - Mean: {np.mean(lengths):.0f}")
     print(f"  - Median: {np.median(lengths):.0f}")
     print(f"  - Min: {np.min(lengths)}")
@@ -174,7 +174,7 @@ def analyze_sequences(sequences_dict):
     # Amino acid composition (example with first sequence)
     first_seq = list(sequences_dict.values())[0]
     amino_acids = set(first_seq)
-    print(f"\n🧬 Amino Acids found: {sorted(amino_acids)}")
+    print(f"\n Amino Acids found: {sorted(amino_acids)}")
     print(f"   Total unique: {len(amino_acids)} (standard is 20)")
 
 
@@ -193,7 +193,7 @@ if __name__ == "__main__":
     
     # Check if files exist
     if not TRAIN_SEQUENCES.exists():
-        print("⚠️  Files not found. Please download CAFA 6 data from Kaggle:")
+        print("  Files not found. Please download CAFA 6 data from Kaggle:")
         print("   https://www.kaggle.com/competitions/cafa-6-protein-function-prediction/data")
     else:
         # Load data
@@ -216,6 +216,6 @@ if __name__ == "__main__":
         )
         
         print("\n" + "=" * 70)
-        print("✅ DATA PREPARATION COMPLETE")
+        print(" DATA PREPARATION COMPLETE")
         print("=" * 70)
         print(f"Ready for embedding extraction!")
